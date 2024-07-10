@@ -52,7 +52,7 @@ jobs:
                     "elements": [
                       {
                         "type": "emoji",
-                        "text": "warning"
+                        "name": "warning"
                       },
                       {
                         "type": "text",
@@ -60,7 +60,7 @@ jobs:
                       },
                       {
                         "type": "emoji",
-                        "text": "warning"
+                        "name": "warning"
                       }
                     ]
                   }

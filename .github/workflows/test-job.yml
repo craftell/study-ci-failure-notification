@@ -38,6 +38,8 @@ jobs:
     needs: job3
     if: ${{ always() && needs.job3.result == 'failure' || needs.job3.result == 'skipped' }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Slack Notification(failure)
         uses: ./.github/actions/notify-failure-to-slack
         with:

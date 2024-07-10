@@ -21,7 +21,7 @@ jobs:
       - name: Run tests
         run: |
           echo "Running tests2..."
-          exit 0
+          exit 1
   job3:
     runs-on: ubuntu-latest
     needs: job2

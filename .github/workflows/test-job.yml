@@ -42,7 +42,39 @@ jobs:
         uses: actions/checkout@v4
       - name: Create JSON payload
         run: |
-          echo '{"text": "Workflowが失敗しました！！！"}' > payload-slack-content.json
+          echo '{
+            "blocks": [
+              {
+                "type": "rich_text",
+                "elements": [
+                  {
+                    "type": "rich_text_section",
+                    "elements": [
+                      {
+                        "type": "emoji",
+                        "text": "warning"
+                      },
+                      {
+                        "type": "text",
+                        "text": "Workflowに失敗しました！"
+                      },
+                      {
+                        "type": "emoji",
+                        "text": "warning"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "<https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}|GitHub Actions>"
+                }
+              }
+            ]
+          }' > payload-slack-content.json
       - name: Send custom JSON data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.26.0

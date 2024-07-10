@@ -1,0 +1,34 @@
+name: Test Job
+
+on: push
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          echo "Running tests1..."
+          exit 0
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          echo "Running tests2..."
+          exit 0
+  job3:
+    runs-on: ubuntu-latest
+    needs: job2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run tests
+        run: |
+          echo "Running tests3..."
+          exit 0

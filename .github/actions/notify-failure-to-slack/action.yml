@@ -1,0 +1,59 @@
+name: Notify Action Failure to Slack
+description: 'Notify Slack when a workflow fails'
+inputs:
+  slack_webhook_url:
+    description: 'Slack webhook URL'
+    required: true
+  message:
+    description: 'Message to send to Slack'
+    required: true
+    default: 'Actionが失敗しました'
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Create JSON payload
+      shell: bash
+      run: |
+        echo '{
+          "blocks": [
+            {
+              "type": "rich_text",
+              "elements": [
+                {
+                  "type": "rich_text_section",
+                  "elements": [
+                    {
+                      "type": "emoji",
+                      "name": "warning"
+                    },
+                    {
+                      "type": "text",
+                      "text": "${{ inputs.message }}"
+                    },
+                    {
+                      "type": "emoji",
+                      "name": "warning"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "<https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}|GitHub Actions>"
+              }
+            }
+          ]
+        }' > payload-slack-content.json
+    - name: Send custom JSON data to Slack workflow
+      id: slack
+      uses: slackapi/slack-github-action@v1.26.0
+      with:
+        payload-file-path: './payload-slack-content.json'
+      env:
+        SLACK_WEBHOOK_URL: ${{ inputs.slack_webhook_url }}
+        SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

@@ -38,49 +38,9 @@ jobs:
     needs: job3
     if: ${{ always() && needs.job3.result == 'failure' || needs.job3.result == 'skipped' }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Create JSON payload
-        run: |
-          echo '{
-            "blocks": [
-              {
-                "type": "rich_text",
-                "elements": [
-                  {
-                    "type": "rich_text_section",
-                    "elements": [
-                      {
-                        "type": "emoji",
-                        "name": "warning"
-                      },
-                      {
-                        "type": "text",
-                        "text": "Workflowに失敗しました！"
-                      },
-                      {
-                        "type": "emoji",
-                        "name": "warning"
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "<https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}|GitHub Actions>"
-                }
-              }
-            ]
-          }' > payload-slack-content.json
-      - name: Send custom JSON data to Slack workflow
-        id: slack
-        uses: slackapi/slack-github-action@v1.26.0
+      - name: Slack Notification(failure)
+        uses: ./.github/actions/notify-failure-to-slack
         with:
-          payload-file-path: './payload-slack-content.json'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          message: 'ほげほげジョブに失敗しました！'
       
